@@ -6,6 +6,7 @@ import torch.optim as optim
 import torch.nn as nn
 import torch
 from model.CRAN import CRAN
+from model.CNN import CNN
 from config import Config
 
 word_embedding_file = 'data/mini_ag_news/mini_word2vec.model'
@@ -25,7 +26,7 @@ else:
 
 config = Config()
 
-net = CRAN(config)
+net = CNN(config)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 for epoch in range(2):
@@ -46,20 +47,16 @@ for epoch in range(2):
         
         inputs = torch.FloatTensor(input_matrix)
         outputs = net(inputs)
-        # one hot编码
-        encoded_labels = torch.zeros(4)
-        encoded_labels[labels - 1] = 1
-
-        print(outputs)
-        print(encoded_labels)
+        labels = torch.tensor([labels - 1]).long()
         # 计算误差
-        loss = criterion(outputs, encoded_labels)
+        print(outputs)
+        loss = criterion(outputs, labels)
         loss.backward()
         optimizer.step()
 
         # print statistics
         running_loss += loss.item()
-        if i % 2000 == 1:    # print every 2000 mini-batches
+        if i % 2000 == 0:    # print every 2000 mini-batches
             print('[%d, %5d] loss: %.3f' %
                   (epoch + 1, i + 1, running_loss / 2000))
             running_loss = 0.0

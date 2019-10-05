@@ -24,4 +24,5 @@ class CRAN(nn.Module):
         rnn_out = self.RNN(x.unsqueeze(0))
         x = self.attention(rnn_out, cnn_out)
         x = F.softmax(x, dim=0)
+        x = x.view(1, 4)
         return x

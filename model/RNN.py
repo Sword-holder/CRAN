@@ -19,8 +19,8 @@ class RNN(nn.Module):
 
     def forward(self, x):
 
-        h0 = Variable(torch.randn(self.layer_size, x.size(1), self.hidden_size))
-        c0 = Variable(torch.randn(self.layer_size, x.size(1), self.hidden_size))
+        h0 = Variable(torch.randn(self.layer_size, x.size(1), self.hidden_size), requires_grad=True)
+        c0 = Variable(torch.randn(self.layer_size, x.size(1), self.hidden_size), requires_grad=True)
 
         output, (final_hidden_state, final_cell_state) = self.lstm(x, (h0, c0))
 

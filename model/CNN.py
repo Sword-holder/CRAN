@@ -18,6 +18,10 @@ class CNN(nn.Module):
 
     def forward(self, x):
 
+        padding = torch.zeros(self.config.sentence_max_size - x.size(0), self.config.word_embedding_dimension)
+        x = torch.cat([x, padding], dim=0)
+        x = x.unsqueeze(0).unsqueeze(0)
+
         # 卷积层
         x1 = F.relu(self.conv1(x))
         x2 = F.relu(self.conv2(x))
@@ -34,7 +38,7 @@ class CNN(nn.Module):
 
         # 全连接层
         x = self.linear1(x)
-        x = x.view(self.config.cnn_output_size)
+        x = x.view(1, self.config.cnn_output_size)
 
         return x
 
